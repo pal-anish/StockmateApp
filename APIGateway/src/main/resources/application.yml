@@ -1,0 +1,32 @@
+server:
+  port: 8085
+spring:
+  application:
+    name: ApiGateway-Service
+  cloud:
+    gateway:
+      routes:
+        - id: UserProfile
+          uri: http://ec2-3-111-245-16.ap-south-1.compute.amazonaws.com:8083
+          predicates:
+            - Path=/api/v1/users/**
+        - id: AuthenticationService
+          uri: http://ec2-3-111-245-16.ap-south-1.compute.amazonaws.com:8081
+          predicates:
+            - Path=/login/**
+        - id: StockService
+          uri: http://ec2-3-111-245-16.ap-south-1.compute.amazonaws.com:8090
+          predicates:
+            - Path=/stocks/**
+        - id: WishlistService
+          uri: http://ec2-3-111-245-16.ap-south-1.compute.amazonaws.com:8087
+          predicates:
+            - Path=/wishlist/**
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Controller-Allow-Credentials
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
